@@ -1,0 +1,14 @@
+{
+    "name": "spryker-demo/service-product-feature",
+    "description": "Service product [feature]",
+    "type": "metapackage",
+    "license": "proprietary",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.0"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
