@@ -103,3 +103,9 @@ Demo data for the following entities is provided by the previous composer packag
 
 * File: `vendor/spryker/spryker-demo/Bundles/ServiceProductDataImport/data/import/DE/shipment_method_store.csv`
 * Command: `shipment-method-store`
+
+#### shipment-price
+
+* File: `vendor/spryker/spryker-demo/Bundles/ServiceProductDataImport/data/import/DE/shipment_price.csv`
+* Command: `shipment-price`
+
