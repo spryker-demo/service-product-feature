@@ -15,8 +15,26 @@ $config[KernelConstants::CORE_NAMESPACES] = [
 ];
 ```
 
-### Wire the oms command and conditions plugin
+### Wire the oms condition plugin
 
+```
+# src/Pyz/Zed/Oms/OmsDependencyProvider.php
+
+use \SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProductConditionPlugin;
+
+// ...
+
+protected function extendConditionPlugins(Container $container): Container
+{
+    $container->extend(self::CONDITION_PLUGINS, function (ConditionCollectionInterface $conditionCollection) {
+        $conditionCollection->add(new IsServiceProductConditionPlugin(), 'Service/IsServiceProduct');
+
+        return $conditionCollection;
+    });
+
+    return $container;
+}
+```
 
 ### Adjust OMS configuration file
 
@@ -31,7 +49,7 @@ console data:import:glossary
 ```
 
 
-### Install demo data (optional)
+### Install demo data
 
 ```
 composer require spryker-demo/service-product-data-import
