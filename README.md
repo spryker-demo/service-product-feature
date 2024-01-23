@@ -15,6 +15,28 @@ $config[KernelConstants::CORE_NAMESPACES] = [
 ];
 ```
 
+### Wire Shipment methood filter plugin
+
+```
+# src/Pyz/Zed/Shipment/ShipmentDependencyProvider.php
+
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Shipment\ServiceProductShipmentGroupMethodFilterPlugin;
+
+// ...
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return array<\Spryker\Zed\ShipmentExtension\Dependency\Plugin\ShipmentMethodFilterPluginInterface>
+     */
+    protected function getMethodFilterPlugins(Container $container): array
+    {
+        return [
+            new ServiceProductShipmentGroupMethodFilterPlugin(),
+        ];
+    }
+```
+
 ### Wire the Merchant OMS condition plugin
 
 ```
@@ -24,6 +46,9 @@ use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\StateMachine\Condition\I
 
 // ...
 
+    /**
+     * @return array<\Spryker\Zed\StateMachine\Dependency\Plugin\ConditionPluginInterface>
+     */
     protected function getStateMachineConditionPlugins(): array
     {
         return [
