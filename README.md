@@ -15,39 +15,173 @@ $config[KernelConstants::CORE_NAMESPACES] = [
 ];
 ```
 
-### Wire the oms condition plugin
+### Wire the Merchant OMS condition plugin
 
 ```
-# src/Pyz/Zed/Oms/OmsDependencyProvider.php
+# src/Pyz/Zed/MerchantOms/MerchantOmsDependencyProvider.php
 
-use \SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProductConditionPlugin;
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\StateMachine\Condition\IsServiceProductConditionPlugin;
 
 // ...
 
-protected function extendConditionPlugins(Container $container): Container
-{
-    $container->extend(self::CONDITION_PLUGINS, function (ConditionCollectionInterface $conditionCollection) {
-        $conditionCollection->add(new IsServiceProductConditionPlugin(), 'Service/IsServiceProduct');
-
-        return $conditionCollection;
-    });
-
-    return $container;
-}
+    protected function getStateMachineConditionPlugins(): array
+    {
+        return [
+            'MarketplaceServiceProduct' => new IsServiceProductConditionPlugin(),
+        ];
+    }
 ```
 
-### Adjust OMS configuration file
-
-
-### Add translations
-
-
-### Import translations
+### Create new state machine subprocess xml file
 
 ```
-console data:import:glossary
+<?xml version="1.0"?>
+<statemachine
+    xmlns="spryker:oms-01"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="spryker:oms-01 http://static.spryker.com/oms-01.xsd">
+
+    <process name="MerchantServiceProduct01">
+        <states>
+            <state name="service product purchased"/>
+            <state name="ready for delivering service"/>
+            <state name="service started"/>
+            <state name="service delivered"/>
+        </states>
+
+        <transitions>
+            <transition happy="true">
+                <source>service product purchased</source>
+                <target>ready for delivering service</target>
+                <event>activate service</event>
+            </transition>
+
+            <transition happy="true">
+                <source>ready for delivering service</source>
+                <target>service started</target>
+                <event>start service</event>
+            </transition>
+
+            <transition happy="true">
+                <source>service started</source>
+                <target>service delivered</target>
+                <event>deliver service</event>
+            </transition>
+
+            <transition happy="true">
+                <source>service delivered</source>
+                <target>delivered</target>
+                <event>complete service</event>
+            </transition>
+        </transitions>
+
+        <events>
+            <event name="activate service" onEnter="true"/>
+            <event name="start service" onEnter="true"/>
+            <event name="deliver service" onEnter="true"/>
+            <event name="complete service" onEnter="true"/>
+        </events>
+    </process>
+</statemachine>
+
 ```
 
+### Integrate Merchant OMS State machine with new subprocess.
+
+```
+<?xml version="1.0"?>
+<statemachine
+    xmlns="spryker:state-machine-01"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="spryker:state-machine-01 http://static.spryker.com/state-machine-01.xsd"
+>
+
+    <process name="MerchantDefaultStateMachine" main="true">
+
+        <states>
+            <state name="created"/>
+            <state name="new"/>
+            <state name="canceled by merchant"/>
+            <state name="shipped"/>
+            <state name="delivered"/>
+            <state name="closed"/>
+        </states>
+
+        <transitions>
+            <transition happy="true">
+                <source>created</source>
+                <target>new</target>
+                <event>initiate</event>
+            </transition>
+
+            <transition happy="true" condition="MarketplaceOrder/IsServiceProduct">
+                <source>new</source>
+                <target>service product purchased</target>
+                <event>check service product purchase</event>
+            </transition>
+
+            <transition happy="true">
+                <source>new</source>
+                <target>shipped</target>
+                <event>ship</event>
+            </transition>
+
+            <transition>
+                <source>new</source>
+                <target>closed</target>
+                <event>close</event>
+            </transition>
+
+            <transition>
+                <source>new</source>
+                <target>canceled by merchant</target>
+                <event>cancel by merchant</event>
+            </transition>
+
+            <transition>
+                <source>canceled by merchant</source>
+                <target>closed</target>
+                <event>close</event>
+            </transition>
+
+            <transition happy="true">
+                <source>shipped</source>
+                <target>delivered</target>
+                <event>deliver</event>
+            </transition>
+
+            <transition happy="true">
+                <source>delivered</source>
+                <target>closed</target>
+                <event>close</event>
+            </transition>
+        </transitions>
+
+        <events>
+            <event name="initiate" onEnter="true"/>
+            <event name="check service product purchase" onEnter="true" />
+            <event name="ship" manual="true" command="MarketplaceOrder/ShipOrderItem"/>
+            <event name="deliver" manual="true" command="MarketplaceOrder/DeliverOrderItem"/>
+            <event name="close"/>
+            <event name="cancel by merchant" manual="true" command="MarketplaceOrder/CancelOrderItem"/>
+        </events>
+
+        <subprocesses>
+            <process>MerchantReturn</process>
+            <process>MerchantRefund</process>
+            <process>MerchantServiceProduct01</process>
+        </subprocesses>
+
+    </process>
+
+    <process name="MerchantReturn" file="Subprocess/MerchantReturn"/>
+    <process name="MerchantRefund" file="Subprocess/MerchantRefund"/>
+    <process name="MerchantServiceProduct01" file="Subprocess/MerchantServiceProduct01"/>
+
+
+</statemachine>
+
+```
 
 ### Install demo data
 
