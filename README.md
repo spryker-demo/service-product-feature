@@ -57,6 +57,55 @@ use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\StateMachine\Condition\I
     }
 ```
 
+### Wire the OMS condition plugin
+
+```
+# src/Pyz/Zed/Oms/OmsDependencyProvider.php
+
+SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProductConditionPlugin;
+
+// ...
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function extendConditionPlugins(Container $container): Container
+    {
+        $container->extend(self::CONDITION_PLUGINS, function (ConditionCollectionInterface $conditionCollection) {
+            // ...
+            $conditionCollection->add(new IsServiceProductConditionPlugin(), 'Service/IsServiceProduct');
+
+            return $conditionCollection;
+        });
+
+        return $container;
+    }
+```
+
+### Create new oms subprocess xml file
+
+```
+<?xml version="1.0"?>
+<statemachine
+    xmlns="spryker:oms-01"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="spryker:oms-01 http://static.spryker.com/oms-01.xsd"
+>
+    <process name="Service">
+        <states>
+            <state name="waiting for delivering by merchant"/>
+        </states>
+
+        <events>
+            <event name="check-is-service" onEnter="true"/>
+        </events>
+    </process>
+</statemachine>
+
+```
+
 ### Create new state machine subprocess xml file
 
 ```
@@ -110,6 +159,62 @@ use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\StateMachine\Condition\I
 </statemachine>
 
 ```
+
+### Include service subprocess into OMS.
+```
+<?xml version="1.0"?>
+<statemachine
+    xmlns="spryker:oms-01"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="spryker:oms-01 http://static.spryker.com/oms-01.xsd"
+>
+
+    <process name="MarketplacePayment01" main="true">
+
+        <states>
+            <!--     ...    -->
+            <state name="ready for shipment" display="oms.state.ready-for-shipment"/>
+            <state name="ready for shipment by merchant" reserved="true" display="oms.state.ready-for-shipment-by-merchant"/>
+            <state name="delivered" reserved="true" display="oms.state.delivered"/>
+        </states>
+
+        <transitions>
+            <!--     ...    -->
+            <transition happy="true">
+                <source>ready for shipment</source>
+                <target>ready for shipment by merchant</target>
+                <event>check-is-service</event>
+            </transition>
+
+            <transition happy="true" condition="Service/IsServiceProduct">
+                <source>ready for shipment</source>
+                <target>waiting for delivering by merchant</target>
+                <event>check-is-service</event>
+            </transition>
+
+            <transition happy="true">
+                <source>waiting for delivering by merchant</source>
+                <target>delivered</target>
+                <event>deliver</event>
+            </transition>
+
+            <!--    ...      -->
+        </transitions>
+
+        <events>
+            <event name="deliver" manual="true"/>
+        </events>
+
+        <subprocesses>
+            <process>Service</process>
+        </subprocesses>
+    </process>
+
+    <process name="Service" file="ServiceSubprocess/DummyService01.xml"/>
+</statemachine>
+
+```
+
 
 ### Integrate Merchant OMS State machine with new subprocess.
 
