@@ -95,7 +95,7 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 >
     <process name="Service">
         <states>
-            <state name="waiting for delivering by merchant"/>
+            <state name="waiting for delivery by merchant"/>
         </states>
 
         <events>
@@ -188,12 +188,12 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 
             <transition happy="true" condition="Service/IsServiceProduct">
                 <source>ready for shipment</source>
-                <target>waiting for delivering by merchant</target>
+                <target>waiting for delivery by merchant</target>
                 <event>check-is-service</event>
             </transition>
 
             <transition happy="true">
-                <source>waiting for delivering by merchant</source>
+                <source>waiting for delivery by merchant</source>
                 <target>delivered</target>
                 <event>deliver</event>
             </transition>
