@@ -99,7 +99,7 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
         </states>
 
         <events>
-            <event name="check-is-service" onEnter="true"/>
+            <event name="check is service" onEnter="true"/>
         </events>
     </process>
 </statemachine>
@@ -183,13 +183,13 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
             <transition happy="true">
                 <source>ready for shipment</source>
                 <target>ready for shipment by merchant</target>
-                <event>check-is-service</event>
+                <event>check is service</event>
             </transition>
 
             <transition happy="true" condition="Service/IsServiceProduct">
                 <source>ready for shipment</source>
                 <target>waiting for delivery by merchant</target>
-                <event>check-is-service</event>
+                <event>check is service</event>
             </transition>
 
             <transition happy="true">
