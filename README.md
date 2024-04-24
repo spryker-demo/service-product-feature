@@ -95,7 +95,7 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 >
     <process name="Service">
         <states>
-            <state name="waiting for delivery by merchant"/>
+            <state name="waiting for delivery by merchant" display="oms.state.waiting-for-delivery-by-merchant"/>
         </states>
 
         <events>
@@ -310,6 +310,17 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 
 
 </statemachine>
+```
+
+### Add translations
+
+```
+# data/import/common/common/glossary.csv
+
+oms.state.waiting-for-delivery-by-merchant, "Ready for delivery by merchant",en_US
+oms.state.waiting-for-delivery-by-merchant, "Bereit zur Auslieferung durch den Händler",de_DE
+oms.state.waiting-for-delivery-by-merchant, "Listo para su entrega por el comerciante",es_ES
+oms.state.waiting-for-delivery-by-merchant, "Prêt à être livré par le commerçant",fr_FR
 
 ```
 
