@@ -317,10 +317,10 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 ```
 # data/import/common/common/glossary.csv
 
-oms.state.waiting-for-delivery-by-merchant, "Ready for delivery by merchant",en_US
-oms.state.waiting-for-delivery-by-merchant, "Bereit zur Auslieferung durch den Händler",de_DE
-oms.state.waiting-for-delivery-by-merchant, "Listo para su entrega por el comerciante",es_ES
-oms.state.waiting-for-delivery-by-merchant, "Prêt à être livré par le commerçant",fr_FR
+oms.state.waiting-for-delivery-by-merchant, "Waiting for delivery by merchant",en_US
+oms.state.waiting-for-delivery-by-merchant, "Warten auf die Lieferung durch den Händler",de_DE
+oms.state.waiting-for-delivery-by-merchant, "A la espera de la entrega por parte del comerciante",es_ES
+oms.state.waiting-for-delivery-by-merchant, "En attente de livraison par le commerçant",fr_FR
 
 ```
 
