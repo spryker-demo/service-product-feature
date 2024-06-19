@@ -117,6 +117,7 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 
     <process name="MerchantServiceProduct01">
         <states>
+            <state name="started service product process"/>
             <state name="service product purchased"/>
             <state name="ready for delivering service"/>
             <state name="service started"/>
@@ -124,6 +125,12 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
         </states>
 
         <transitions>
+            <transition happy="true">
+                <source>started service product process</source>
+                <target>service product purchased</target>
+                <event>check service product purchase</event>
+            </transition>
+
             <transition happy="true">
                 <source>service product purchased</source>
                 <target>ready for delivering service</target>
@@ -150,10 +157,11 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
         </transitions>
 
         <events>
-            <event name="activate service" onEnter="true"/>
-            <event name="start service" onEnter="true"/>
-            <event name="deliver service" onEnter="true"/>
-            <event name="complete service" onEnter="true"/>
+            <event name="check service product purchase" onEnter="true"/>
+            <event name="activate service" manual="true"/>
+            <event name="start service" manual="true"/>
+            <event name="deliver service" manual="true"/>
+            <event name="complete service" manual="true"/>
         </events>
     </process>
 </statemachine>
@@ -216,7 +224,7 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 ```
 
 
-### Integrate Merchant OMS State machine with new subprocess.
+### Integrate Merchant State machine with new subprocess.
 
 ```
 <?xml version="1.0"?>
@@ -246,8 +254,8 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 
             <transition happy="true" condition="MarketplaceOrder/IsServiceProduct">
                 <source>new</source>
-                <target>service product purchased</target>
-                <event>check service product purchase</event>
+                <target>started service product process</target>
+                <event>ship</event>
             </transition>
 
             <transition happy="true">
@@ -289,7 +297,6 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
 
         <events>
             <event name="initiate" onEnter="true"/>
-            <event name="check service product purchase" onEnter="true" />
             <event name="ship" manual="true" command="MarketplaceOrder/ShipOrderItem"/>
             <event name="deliver" manual="true" command="MarketplaceOrder/DeliverOrderItem"/>
             <event name="close"/>
