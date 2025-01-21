@@ -62,7 +62,7 @@ use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\StateMachine\Condition\I
 ```
 # src/Pyz/Zed/Oms/OmsDependencyProvider.php
 
-SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProductConditionPlugin;
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProductConditionPlugin;
 
 // ...
 
@@ -83,6 +83,29 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
         return $container;
     }
 ```
+
+### Wire Product view expander plugin
+```
+#src/Pyz/Client/ProductStorage/ProductStorageDependencyProvider.php
+
+use SprykerDemo\Client\ServiceProduct\Plugin\ProductStorage\ProductViewServiceProductExpanderPlugin;
+
+    /**
+     * @return array<\Spryker\Client\ProductStorage\Dependency\Plugin\ProductViewExpanderPluginInterface>
+     */
+    protected function getProductViewExpanderPlugins(): array
+    {
+        /** @var array<\Spryker\Client\ProductStorage\Dependency\Plugin\ProductViewExpanderPluginInterface> $plugins */
+        $plugins = [
+            ...
+            new ProductViewServiceProductExpanderPlugin(),
+        ];
+
+        return $plugins;
+    }
+
+```
+
 
 ### Create new oms subprocess xml file
 
