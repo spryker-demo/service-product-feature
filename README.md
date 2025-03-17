@@ -15,7 +15,7 @@ $config[KernelConstants::CORE_NAMESPACES] = [
 ];
 ```
 
-### Wire Shipment methood filter plugin
+### Wire Shipment method filter plugin
 
 ```
 # src/Pyz/Zed/Shipment/ShipmentDependencyProvider.php
