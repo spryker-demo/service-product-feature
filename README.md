@@ -84,26 +84,57 @@ use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceP
     }
 ```
 
-### Wire Product view expander plugin
+### Wire following expander plugins:
 ```
-#src/Pyz/Client/ProductStorage/ProductStorageDependencyProvider.php
+#src/Pyz/Zed/Cart/CartDependencyProvider.php
 
-use SprykerDemo\Client\ServiceProduct\Plugin\ProductStorage\ProductViewServiceProductExpanderPlugin;
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Cart\ServiceProductItemExpanderPlugin;
 
     /**
-     * @return array<\Spryker\Client\ProductStorage\Dependency\Plugin\ProductViewExpanderPluginInterface>
+     * @return array<\Spryker\Zed\CartExtension\Dependency\Plugin\ItemExpanderPluginInterface>
      */
-    protected function getProductViewExpanderPlugins(): array
+    protected function getExpanderPlugins(): array
     {
-        /** @var array<\Spryker\Client\ProductStorage\Dependency\Plugin\ProductViewExpanderPluginInterface> $plugins */
-        $plugins = [
+        return [
             ...
-            new ProductViewServiceProductExpanderPlugin(),
+            new ServiceProductItemExpanderPlugin(),
         ];
-
-        return $plugins;
     }
 
+```
+
+```
+#src/Pyz/Zed/Product/ProductDependencyProvider.php
+
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Product\ServiceProductProductConcreteExpanderPlugin;
+
+    /**
+     * @return array<\Spryker\Zed\ProductExtension\Dependency\Plugin\ProductConcreteExpanderPluginInterface>
+     */
+    protected function getProductConcreteExpanderPlugins(): array
+    {
+        return [
+            ...
+            new ServiceProductProductConcreteExpanderPlugin(),
+        ];
+    }
+```
+
+```
+#src/Pyz/Zed/ProductStorage/ProductStorageDependencyProvider.php
+
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\ProductStorage\ServiceProductProductConcreteStorageExpanderPlugin;
+
+    /**
+     * @return array<\Spryker\Zed\ProductStorageExtension\Dependency\Plugin\ProductConcreteStorageCollectionExpanderPluginInterface>
+     */
+    protected function getProductConcreteStorageCollectionExpanderPlugins(): array
+    {
+        return [
+            ...
+            new ServiceProductProductConcreteStorageExpanderPlugin(),
+        ];
+    }
 ```
 
 
