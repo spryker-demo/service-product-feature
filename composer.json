@@ -6,7 +6,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "spryker-demo/service-product": "^1.0.0"
     },
     "config": {
