@@ -16,7 +16,7 @@ $config[KernelConstants::CORE_NAMESPACES] = [
 ];
 ```
 
-### Wire Shipment methood filter plugin
+### Wire Shipment method filter plugin
 
 ```
 # src/Pyz/Zed/Shipment/ShipmentDependencyProvider.php
@@ -63,7 +63,7 @@ use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\StateMachine\Condition\I
 ```
 # src/Pyz/Zed/Oms/OmsDependencyProvider.php
 
-SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProductConditionPlugin;
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProductConditionPlugin;
 
 // ...
 
@@ -84,6 +84,60 @@ SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Oms\Condition\IsServiceProdu
         return $container;
     }
 ```
+
+### Wire following expander plugins:
+```
+#src/Pyz/Zed/Cart/CartDependencyProvider.php
+
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Cart\ServiceProductItemExpanderPlugin;
+
+    /**
+     * @return array<\Spryker\Zed\CartExtension\Dependency\Plugin\ItemExpanderPluginInterface>
+     */
+    protected function getExpanderPlugins(): array
+    {
+        return [
+            ...
+            new ServiceProductItemExpanderPlugin(),
+        ];
+    }
+
+```
+
+```
+#src/Pyz/Zed/Product/ProductDependencyProvider.php
+
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\Product\ServiceProductProductConcreteExpanderPlugin;
+
+    /**
+     * @return array<\Spryker\Zed\ProductExtension\Dependency\Plugin\ProductConcreteExpanderPluginInterface>
+     */
+    protected function getProductConcreteExpanderPlugins(): array
+    {
+        return [
+            ...
+            new ServiceProductProductConcreteExpanderPlugin(),
+        ];
+    }
+```
+
+```
+#src/Pyz/Zed/ProductStorage/ProductStorageDependencyProvider.php
+
+use SprykerDemo\Zed\ServiceProduct\Communication\Plugin\ProductStorage\ServiceProductProductConcreteStorageExpanderPlugin;
+
+    /**
+     * @return array<\Spryker\Zed\ProductStorageExtension\Dependency\Plugin\ProductConcreteStorageCollectionExpanderPluginInterface>
+     */
+    protected function getProductConcreteStorageCollectionExpanderPlugins(): array
+    {
+        return [
+            ...
+            new ServiceProductProductConcreteStorageExpanderPlugin(),
+        ];
+    }
+```
+
 
 ### Create new oms subprocess xml file
 
